@@ -1,0 +1,22 @@
+//Kromatum BlackJack login
+//Functionality ( Login, choose BlackJack, Load chips from file, if 0, start with $100.00)
+//From Login Switch... in Kromatum/Choices
+
+
+/**
+  *Documentation to know that when Blackjack was called.
+  *
+  **/
+public void playBlackJack()
+{
+//load up the black jack.
+//Insert Blackjack code here, OR
+
+System.out.println("You have selected Blackjack. Please wait while the game loads...");
+Blackjack.loadBlackJack();
+}
+//On exit of BlackJack, loop into main loop.
+
+
+
+
