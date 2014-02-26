@@ -78,6 +78,11 @@ public class JokePanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
+		int endCount = 0;
+		int firstIndex = 0;
+		for (int i = firstIndex; i < jokes.length; i++) {
+			endCount++;
+		}
 
 		punchlineButton.setEnabled(true);
 		randomButton.setEnabled(true);
@@ -86,15 +91,15 @@ public class JokePanel extends JPanel implements ActionListener {
 		if (nextButton == ae.getSource()) {
 			jokeAnswer.setText("");
 
-			if (count == 10) {
-				count = 0;
+			if (count == endCount) {
+				count = firstIndex;
 			}
 
 			jokeQuestion.setText((count + 1) + ". " + jokes[count].getSetup());
 			count++;
 
-			if (count == 10) {
-				count = 0;
+			if (count == endCount) {
+				count = firstIndex;
 			}
 
 			// System.out.println(count);
@@ -102,13 +107,13 @@ public class JokePanel extends JPanel implements ActionListener {
 		} else if (previousButton == ae.getSource()) {
 			jokeAnswer.setText("");
 
-			if (count == 0) {
+			if (count == firstIndex) {
 				jokeQuestion.setText((count + 9) + ". " + jokes[9].getSetup());
-				count = 10;
+				count = endCount;
 			}
 
-			if (count == 1) {
-				count = 11;
+			if (count == firstIndex + 1) {
+				count = endCount + 1;
 			}
 
 			jokeQuestion.setText((count - 1) + ". "
@@ -128,8 +133,8 @@ public class JokePanel extends JPanel implements ActionListener {
 
 		} else if (punchlineButton == ae.getSource()) {
 
-			if (count == 0) {
-				jokeAnswer.setText(jokes[9].getPunchline());
+			if (count == firstIndex) {
+				jokeAnswer.setText(jokes[endCount - 1].getPunchline());
 				return;
 			}
 
