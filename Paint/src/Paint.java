@@ -1,4 +1,11 @@
-import java.awt.BorderLayout;
+/*
+ * TO-DO:
+ * 1. Add size of the brush to the panel --Done Tyler
+ * 2. perhaps make buttons into an array of buttons?\
+ * 3. Make it so that the border on the bottom gets repainted so we cant go out of the border.
+ * 4. Add save functionality
+ */
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -27,56 +34,70 @@ public class Paint extends JPanel implements MouseListener,
 	private JButton eraseButton = new JButton("Eraser");
 	private JButton redButton = new JButton("Red");
 	private JButton greenButton = new JButton("Green");
+	private JButton yellowButton = new JButton("Yellow");
+	private JButton smallButton = new JButton("Small");
+	private JButton medButton = new JButton("Medium");
+	private JButton largeButton = new JButton("Large");
 	private JLabel title = new JLabel();
-	private JPanel buttonPanel = new JPanel(new GridLayout(1, 1));
-	JPanel northPanel = new JPanel(new GridLayout(1, 1));
-	JPanel header = new JPanel(new GridLayout());
+	private JPanel sizePanel = new JPanel(new GridLayout(1, 1, 1, 1));
+	private JPanel colorPanel = new JPanel(new GridLayout(1, 1, 1, 1));
+	private JPanel northPanel = new JPanel(new GridLayout(1, 1, 1, 1));
+	private JPanel header = new JPanel(new GridLayout());
+	private JMenuBar menubar = new JMenuBar();
+	private JMenu file = new JMenu("File");
+	private JMenuItem exit = new JMenuItem("Exit");
+	private JMenuItem clearAll = new JMenuItem("Clear");
 
 	public Paint() {
-
-		JMenuBar menubar = new JMenuBar();
-		JMenu file = new JMenu("File");
-		JMenuItem exit = new JMenuItem("Exit");
-		JMenuItem clearAll = new JMenuItem("Clear");
-		clearAll.setToolTipText("Clears the Window");
-		exit.setToolTipText("Exit Paint");
+		// Adds the menu bar
+		add(header);
 		header.add(menubar);
 		menubar.add(file);
 		file.add(exit);
 		file.add(clearAll);
-		menubar.add(file);
-		exit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				System.exit(0);
-			}
-		});
-		clearAll.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				repaint();
-			}
-		});
-		add(header, BorderLayout.BEFORE_FIRST_LINE);
-		add(northPanel, BorderLayout.CENTER);
+		clearAll.setToolTipText("Clears the Window");
+		exit.setToolTipText("Exit Paint");
+
+		// Adds the header
+		add(northPanel);
 		northPanel.add(title);
 		northPanel.setBackground(Color.WHITE);
 		northPanel.setPreferredSize(new Dimension(500, 400));
 		northPanel.addMouseMotionListener(this);
 		northPanel.addMouseListener(this);
 
-		add(buttonPanel);
-		buttonPanel.add(blackButton);
-		buttonPanel.add(blueButton);
-		buttonPanel.add(redButton);
-		buttonPanel.add(greenButton);
-		buttonPanel.add(eraseButton);
+		// Colour Buttons
+		add(colorPanel);
+		colorPanel.add(blackButton);
+		colorPanel.add(blueButton);
+		colorPanel.add(redButton);
+		colorPanel.add(greenButton);
+		colorPanel.add(yellowButton);
+		colorPanel.add(eraseButton);
 
+		// TO-DO: Size Buttons
+		add(sizePanel);
+		sizePanel.add(smallButton);
+		sizePanel.add(medButton);
+		sizePanel.add(largeButton);
+
+		// Adds the listeners for the buttons, and the File Menu
+		// Colour actions
 		blackButton.addActionListener(this);
 		blueButton.addActionListener(this);
 		redButton.addActionListener(this);
 		eraseButton.addActionListener(this);
 		greenButton.addActionListener(this);
+		yellowButton.addActionListener(this);
+
+		// Size actions
+		smallButton.addActionListener(this);
+		medButton.addActionListener(this);
+		largeButton.addActionListener(this);
+
+		// File actions
+		exit.addActionListener(this);
+		clearAll.addActionListener(this);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -114,6 +135,8 @@ public class Paint extends JPanel implements MouseListener,
 		y = me.getY();
 		g.setColor(getColor());
 		g.fillOval(x + 5, y + 28, getXSize(), getYSize());
+		colorPanel.repaint();
+		sizePanel.repaint();
 
 	}
 
@@ -123,14 +146,15 @@ public class Paint extends JPanel implements MouseListener,
 		y = me.getY();
 		g.setColor(getColor());
 		g.fillOval(x + 5, y + 28, getXSize(), getYSize());
-
+		colorPanel.repaint();
+		sizePanel.repaint();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		Graphics g = getGraphics();
-		setXSize(5);
-		setYSize(5);
+
+		// Color actions
 		if (blackButton == ae.getSource()) {
 			setColor(Color.BLACK);
 		} else if (blueButton == ae.getSource()) {
@@ -139,10 +163,28 @@ public class Paint extends JPanel implements MouseListener,
 			setColor(Color.RED);
 		} else if (greenButton == ae.getSource()) {
 			setColor(Color.GREEN);
+		} else if (yellowButton == ae.getSource()) {
+			setColor(Color.YELLOW);
 		} else if (eraseButton == ae.getSource()) {
-			setXSize(20);
-			setYSize(20);
 			setColor(Color.WHITE);
+		}
+		// File actions
+		else if (clearAll == ae.getSource()) {
+			repaint();
+		} else if (exit == ae.getSource()) {
+			System.exit(0);
+		}
+
+		// Size actions
+		else if (smallButton == ae.getSource()) {
+			setXSize(5);
+			setYSize(5);
+		} else if (medButton == ae.getSource()) {
+			setXSize(15);
+			setYSize(15);
+		} else if (largeButton == ae.getSource()) {
+			setXSize(25);
+			setYSize(25);
 		}
 	}
 
