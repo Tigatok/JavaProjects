@@ -14,6 +14,15 @@ public class Painter extends JComponent {
 	Image image;// The image that we draw on.
 	Graphics2D g2D;// This is what we use to draw on.
 	int currentX, currentY, oldX, oldY; // mouse coords
+	int xSize = 5;
+	int ySize = 5;
+
+	// Checkers to change the tool
+	private boolean checkCircle;
+	private boolean checkSquare;
+	private boolean checkSharpie;
+	private boolean checkEraser;
+	private boolean checkPencil = true;
 
 	// Constructors:
 	public Painter() {
@@ -25,6 +34,33 @@ public class Painter extends JComponent {
 				oldX = e.getX();
 				oldY = e.getY();
 			}// End mouse Pressed
+
+			public void mouseClicked(MouseEvent e) {
+				currentX = e.getX();
+				currentY = e.getY();
+				if (checkPencil) {
+					g2D.drawLine(oldX, oldY, currentX, currentY);
+					repaint();
+				} else if (checkSquare) {
+					g2D.fillRect(currentX, currentY, getXSize(), getYSize());
+					repaint();
+				} else if (checkSharpie) {
+					g2D.fillRect(currentX, currentY, getXSize() / 2,
+							getYSize() + 15);
+					repaint();
+				} else if (checkEraser) {
+					g2D.setPaint(Color.WHITE);
+					g2D.fillOval(currentX, currentY, getXSize(), getYSize());
+					g2D.setPaint(Color.BLACK);
+					repaint();
+				} else if (checkCircle) {
+					g2D.fillOval(currentX, currentY, getXSize(), getYSize());
+					repaint();
+				}
+				repaint();
+				oldX = currentX;
+				oldY = currentY;
+			}
 		});// End MouseListener
 			// while the mouse is dragged it sets CurrentX and currentY as the
 			// mouses x and y
@@ -35,16 +71,31 @@ public class Painter extends JComponent {
 			public void mouseDragged(MouseEvent e) {
 				currentX = e.getX();
 				currentY = e.getY();
-				g2D.drawLine(oldX, oldY, currentX, currentY);
+				if (checkPencil) {
+					g2D.drawLine(oldX, oldY, currentX, currentY);
+					repaint();
+				} else if (checkSquare) {
+					g2D.fillRect(currentX, currentY, getXSize(), getYSize());
+					repaint();
+				} else if (checkSharpie) {
+					g2D.fillRect(currentX, currentY, getXSize() / 2,
+							getYSize() + 15);
+					repaint();
+				} else if (checkEraser) {
+					g2D.setPaint(Color.WHITE);
+					g2D.fillRect(currentX, currentY, getXSize(), getYSize());
+					g2D.setPaint(Color.BLACK);
+					repaint();
+				} else if (checkCircle) {
+					g2D.fillOval(currentX, currentY, getXSize(), getYSize());
+					repaint();
+				}
 				repaint();
 				oldX = currentX;
 				oldY = currentY;
 			}// End MouseDragged
 
-			@Override
 			public void mouseMoved(MouseEvent e) {
-				// TODO Auto-generated method stub
-
 			}// End MouseMoved
 		}); // End MouseMotionListener
 	}// End Painter
@@ -114,4 +165,52 @@ public class Painter extends JComponent {
 		repaint();
 	}// end Yellow Paint
 
+	// Colour Tool
+	public void circleTool() {
+		checkCircle = true;
+		checkSquare = false;
+		checkSharpie = false;
+		checkEraser = false;
+		checkPencil = false;
+	}// end circleTool
+
+	public void squareTool() {
+		checkCircle = false;
+		checkSquare = true;
+		checkSharpie = false;
+		checkEraser = false;
+		checkPencil = false;
+	}// end squareTool
+
+	public void sharpieTool() {
+		checkCircle = false;
+		checkSquare = false;
+		checkSharpie = true;
+		checkEraser = false;
+		checkPencil = false;
+	}
+
+	public void eraserTool() {
+		checkCircle = false;
+		checkSquare = false;
+		checkSharpie = false;
+		checkEraser = true;
+		checkPencil = false;
+	}
+
+	public void pencilTool() {
+		checkCircle = false;
+		checkSquare = false;
+		checkSharpie = false;
+		checkEraser = false;
+		checkPencil = true;
+	}
+
+	public int getXSize() {
+		return xSize;
+	}
+
+	public int getYSize() {
+		return ySize;
+	}
 }// end class
